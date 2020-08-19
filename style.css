@@ -1687,6 +1687,7 @@ li {
 
 .bracket_table {
     border-collapse: collapse;
+    width: 100%;
 }
 
 .tr_br {
