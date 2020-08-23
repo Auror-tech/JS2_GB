@@ -4,9 +4,9 @@ const goods = [
     { title: 'MANGO PEOPLE T-SHIRT', price: 50, imgSrc: 'img/bracket_2.jpg', color: 'BLUE', size: 'XI', quantity: 3, shippingType: 'FREE'},
     { title: 'MANGO PEOPLE T-SHIRT', price: 350, imgSrc: 'img/bracket_3.jpg', color: 'GREEN', size: 'X', quantity: 7, shippingType: 'FREE'},
     { title: 'MANGO PEOPLE T-SHIRT', price: 450, imgSrc: 'img/bracket_3.jpg', color: 'YELLOW', size: 'IX', quantity: 4, shippingType: 'FREE'},
-  ];
-  
-const renderGoodsItem = (title, price, imgSrc, color, size, quantity, shippingType) => {
+    { },
+];
+const renderGoodsItem = (title = "SOON", price = 0, imgSrc = "img/soon_placeholder.jpg", color = "???", size = "?", quantity = "0", shippingType = "???") => {
     return `<tr class="tr_br">
                 <td class="td_br td_br1">
                     <img src="${imgSrc}" alt="" class="br_img">

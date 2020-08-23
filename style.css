@@ -1657,6 +1657,8 @@ li {
     display: inline-block;
     float: left;
     padding-bottom: 25;
+    width: 100px;
+    height: 115px;
 }
 
 .br_name {
