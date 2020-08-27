@@ -6,9 +6,27 @@ const goods = [
     { title: 'MANGO PEOPLE T-SHIRT', price: 450, imgSrc: 'img/bracket_3.jpg', color: 'YELLOW', size: 'IX', quantity: 4, shippingType: 'FREE'},
     { },
 ];
+const products = [
+    { title: 'MANGO PEOPLE T-SHIRT', price: 150, imgSrc: 'img/product1.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 50, imgSrc: 'img/product2.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 350, imgSrc: 'img/product3.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 450, imgSrc: 'img/product4.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 150, imgSrc: 'img/product5.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 50, imgSrc: 'img/product6.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 350, imgSrc: 'img/product7.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 450, imgSrc: 'img/product8.png'},
+    { },
+];
 
 class GoodsItem {
-    constructor(title = "SOON", price = 0, imgSrc = "img/soon_placeholder.jpg", color = "???", size = "?", quantity = 0, shippingType = "???"){
+    constructor(title = "SOON",
+                price = 0,
+                imgSrc = "img/soon_placeholder.jpg",
+                color = "???",
+                size = "?",
+                quantity = 0,
+                shippingType = "???"
+                ){
         this.title = title;
         this.price = price;
         this.imgSrc = imgSrc;
@@ -72,7 +90,59 @@ class GoodsList {
         document.querySelector ('.grand_total').innerHTML = "&#36;" + summ;
     }
 }
-const list = new GoodsList();
-list.fetchGoods();
-list.render();
-list.calculateAndRenderSummary ();
+//const list = new GoodsList();
+//list.fetchGoods();
+//list.render();
+//list.calculateAndRenderSummary ();
+
+class ProductItem {
+    constructor(title = "SOON", price = 0, imgSrc = "img/soon_placeholder.jpg"){
+        this.title = title;
+        this.price = price;
+        this.imgSrc = imgSrc;
+    }
+    render() {
+        return `
+        <div class="item_block">
+            <a href="#" class="featured_link"> <img src="${this.imgSrc}" alt="" class="featured_link_img">
+                <a href="#" class="add_to_cart_link">
+                    <div class="add_to_cart"><img src="img/bracket_white.svg" alt="">
+                        <div class="add_to_cart_text">Add to Cart</div>
+                    </div>
+                </a>
+                <div class="description_featured">
+                    <div class="featured_name">${this.title}</div>
+                    <div class="featured_price">$${this.price}.00</div>
+                </div>
+            </a>
+        </div>`;
+    }
+}
+class ProductList {
+    constructor () {
+        this.goods = [];
+    }
+    fetchGoods (itemsArray = []){
+        this.goods = itemsArray;
+    }
+    render () {
+        let html = "";
+        this.goods.forEach(({title, price, imgSrc}) => {
+            const goodItem = new ProductItem(title, price, imgSrc);
+            html += goodItem.render();
+        });
+        document.querySelector ('.products').innerHTML = html;
+    }
+    // calculateAndRenderSummary () {
+    //     let summ = 0;
+    //     this.goods.forEach(({price = 0, quantity = 1}) => {
+    //         summ += price*quantity;
+    //         console.log(price);
+    //     });
+    //     document.querySelector ('.sub_total').innerHTML = "Sub total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#36;" + summ;
+    //     document.querySelector ('.grand_total').innerHTML = "&#36;" + summ;
+    // }
+}
+const itemslist = new ProductList();
+itemslist.fetchGoods(products);
+itemslist.render();

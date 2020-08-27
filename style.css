@@ -261,6 +261,7 @@ body {
     position: relative;
 }
 
+
 .item_block:hover {
     box-shadow: 0 5px 8px rgba(0, 0, 0, 0.16);
 }
@@ -304,7 +305,10 @@ body {
     box-shadow: 0 5px 8px rgba(0, 0, 0, 0.16);
     background-color: #ffffff;
 }
-
+.featured_link_img{
+    width: 263px;
+    height: 280px;
+}
 .featured_link_img_active {
     opacity: 0;
     background-image: url(img/Background213.png)
