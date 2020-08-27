@@ -146,3 +146,28 @@ class ProductList {
 const itemslist = new ProductList();
 itemslist.fetchGoods(products);
 itemslist.render();
+
+const api = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/addToBasket.json";
+
+const makeGETRequest = (method, url, cb ) => {
+    let xhr;
+    if (window.XMLHttpRequest) {
+      xhr = new XMLHttpRequest();
+    } else if  (window.ActiveXObject) {
+      xhr = new ActiveXObject ("Microsoft.XMLHTTP");
+    };
+    
+    //2
+    
+    xhr.onreadystatechange = function (){
+      if (xhr.readyState === xhr.DONE && xhr.status === 200 ) {
+        cb(console.log(JSON.parse(xhr.response)));
+      }
+    }
+    xhr.open(method, url); 
+    xhr.send({});
+  }
+  
+  makeGETRequest ('GET', api, (data) => {
+    console.log (data);
+  });
