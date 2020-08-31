@@ -71,8 +71,14 @@ class GoodsList {
     }
     fetchGoods (){
         this.goods = goods;
+        console.log(goods);
     }
+    deleteGoods(id) {
+        this.goods.splice(id, 1);
+    }
+    
     render () {
+        //это же и есть получение списка товаров корзины
         let html = "";
         this.goods.forEach(({title, price, imgSrc, color, size, quantity, shippingType}) => {
             const goodItem = new GoodsItem(title, price, imgSrc, color, size, quantity, shippingType);
@@ -90,10 +96,12 @@ class GoodsList {
         document.querySelector ('.grand_total').innerHTML = "&#36;" + summ;
     }
 }
-//const list = new GoodsList();
-//list.fetchGoods();
-//list.render();
-//list.calculateAndRenderSummary ();
+const list = new GoodsList();
+list.fetchGoods();
+list.deleteGoods(1);
+list.render();
+list.calculateAndRenderSummary ();
+
 
 class ProductItem {
     constructor(title = "SOON", price = 0, imgSrc = "img/soon_placeholder.jpg"){
@@ -143,6 +151,31 @@ class ProductList {
     //     document.querySelector ('.grand_total').innerHTML = "&#36;" + summ;
     // }
 }
-const itemslist = new ProductList();
-itemslist.fetchGoods(products);
-itemslist.render();
+// const itemslist = new ProductList();
+// itemslist.fetchGoods(products);
+// itemslist.render();
+
+
+const api = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/addToBasket.json";
+
+const makeGETRequest = (url, cb ) => {
+    let xhr;
+    if (window.XMLHttpRequest) {
+      xhr = new XMLHttpRequest();
+    } else if  (window.ActiveXObject) {
+      xhr = new ActiveXObject ("Microsoft.XMLHTTP");
+    };
+ 
+    //2
+
+    xhr.onreadystatechange = function (){
+      if (xhr.readyState === xhr.DONE && xhr.status === 200 ) {
+        let data = JSON.parse(xhr.response)
+        cb(console.log('data',data));
+      }
+    }
+    xhr.open('GET', url);
+    xhr.send({});
+  }
+
+  makeGETRequest (api, (data) => {  });
