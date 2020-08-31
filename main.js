@@ -96,11 +96,11 @@ class GoodsList {
         document.querySelector ('.grand_total').innerHTML = "&#36;" + summ;
     }
 }
-const list = new GoodsList();
-list.fetchGoods();
-list.deleteGoods(1);
-list.render();
-list.calculateAndRenderSummary ();
+// const list = new GoodsList();
+// list.fetchGoods();
+// list.deleteGoods(1);
+// list.render();
+// list.calculateAndRenderSummary ();
 
 
 class ProductItem {
@@ -151,9 +151,9 @@ class ProductList {
     //     document.querySelector ('.grand_total').innerHTML = "&#36;" + summ;
     // }
 }
-// const itemslist = new ProductList();
-// itemslist.fetchGoods(products);
-// itemslist.render();
+const itemslist = new ProductList();
+itemslist.fetchGoods(products);
+itemslist.render();
 
 
 const api = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/addToBasket.json";
@@ -165,17 +165,31 @@ const makeGETRequest = (url, cb ) => {
     } else if  (window.ActiveXObject) {
       xhr = new ActiveXObject ("Microsoft.XMLHTTP");
     };
- 
-    //2
 
-    xhr.onreadystatechange = function (){
-      if (xhr.readyState === xhr.DONE && xhr.status === 200 ) {
-        let data = JSON.parse(xhr.response)
-        cb(console.log('data',data));
-      }
-    }
     xhr.open('GET', url);
-    xhr.send({});
+    xhr.send();
+    console.log('2');
+
+    let request = new Promise ((resolve, reject) => {
+        xhr.onreadystatechange = function (){
+            if (xhr.readyState === xhr.DONE && xhr.status === 200 ) {
+                let data  = JSON.parse(xhr.response);
+                resolve({data});
+            } else if (xhr.status != 200) {
+                reject(console.log('Error'));
+            }
+        }
+    });
+    request
+        .then((data) => {
+            cb(data);
+        })
+        .catch(() => {
+            console.log('Error');
+        });
   }
 
-  makeGETRequest (api, (data) => {  });
+makeGETRequest(api, (data) => {
+    console.log(data);
+});
+
