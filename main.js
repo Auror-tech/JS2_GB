@@ -158,7 +158,7 @@ itemslist.render();
 
 const api = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/addToBasket.json";
 
-const makeGETRequest = (url, cb ) => {
+const makeGETRequest = (url) => {
     let xhr;
     if (window.XMLHttpRequest) {
       xhr = new XMLHttpRequest();
@@ -170,26 +170,24 @@ const makeGETRequest = (url, cb ) => {
     xhr.send();
     console.log('2');
 
-    let request = new Promise ((resolve, reject) => {
+    return new Promise ((resolve, reject) => {
         xhr.onreadystatechange = function (){
             if (xhr.readyState === xhr.DONE && xhr.status === 200 ) {
                 let data  = JSON.parse(xhr.response);
-                resolve({data});
-            } else if (xhr.status != 200) {
-                reject(console.log('Error'));
-            }
+                resolve(data);
+            } else if (xhr.status != 200) {}
         }
     });
-    request
-        .then((data) => {
-            cb(data);
-        })
-        .catch(() => {
-            console.log('Error');
-        });
+    // request
+    //     .then((data) => {
+    //         cb(data);
+    //     })
+    //     .catch(() => {
+    //         console.log('Error');
+    //     });
   }
 
-makeGETRequest(api, (data) => {
-    console.log(data);
-});
+makeGETRequest(api)
+    .then((data) => {console.log(data)})
+    .catch(() => {console.log('Error')})
 
