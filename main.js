@@ -1,12 +1,7 @@
 "use strict"
+
+const api = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses";
 const goods = [
-    { title: 'MANGO PEOPLE T-SHIRT', price: 150, imgSrc: 'img/bracket_1.jpg', color: 'RED', size: 'XII', quantity: 2, shippingType: 'FREE'},
-    { title: 'MANGO PEOPLE T-SHIRT', price: 50, imgSrc: 'img/bracket_2.jpg', color: 'BLUE', size: 'XI', quantity: 3, shippingType: 'FREE'},
-    { title: 'MANGO PEOPLE T-SHIRT', price: 350, imgSrc: 'img/bracket_3.jpg', color: 'GREEN', size: 'X', quantity: 7, shippingType: 'FREE'},
-    { title: 'MANGO PEOPLE T-SHIRT', price: 450, imgSrc: 'img/bracket_3.jpg', color: 'YELLOW', size: 'IX', quantity: 4, shippingType: 'FREE'},
-    { },
-];
-const products = [
     { title: 'MANGO PEOPLE T-SHIRT', price: 150, imgSrc: 'img/product1.png'},
     { title: 'MANGO PEOPLE T-SHIRT', price: 50, imgSrc: 'img/product2.png'},
     { title: 'MANGO PEOPLE T-SHIRT', price: 350, imgSrc: 'img/product3.png'},
@@ -18,94 +13,11 @@ const products = [
     { },
 ];
 
+
 class GoodsItem {
-    constructor(title = "SOON",
-                price = 0,
-                imgSrc = "img/soon_placeholder.jpg",
-                color = "???",
-                size = "?",
-                quantity = 0,
-                shippingType = "???"
-                ){
-        this.title = title;
-        this.price = price;
-        this.imgSrc = imgSrc;
-        this.color = color;
-        this.size = size;
-        this.quantity = quantity;
-        this.shippingType = shippingType;
-    }
-    render() {
-        return `<tr class="tr_br">
-        <td class="td_br td_br1">
-            <img src="${this.imgSrc}" alt="" class="br_img">
-            <div class="br_description">
-                <div class="br_name">${this.title}</div>
-                <div class="br_color">
-                <span class="bold11_black">Color: </span>
-                <span class="thin11_gray">${this.color}</span> <br>
-                
-                </div>
-                <div class="br_size">
-                    <span class="bold11_black">Size:</span>
-                <span class="thin11_gray">${this.size}</span>
-                </div>
-            </div>
-        </td>
-        <td class="td_br">&#36;${this.price}</td>
-        <td class="td_br">
-            <input type="number" class="br_quantity" value="${this.quantity}">
-        </td>
-        <td class="td_br">${this.shippingType}</td>
-        <td class="td_br">&#36;${this.price*this.quantity}</td>
-        <td class="td_br">
-            <img src="img/delete_icon.png" alt="" class="br_delete">
-        </td>
-    </tr>`;
-    }
-}
-
-class GoodsList {
-    constructor () {
-        this.goods = [];
-    }
-    fetchGoods (){
-        this.goods = goods;
-        console.log(goods);
-    }
-    deleteGoods(id) {
-        this.goods.splice(id, 1);
-    }
-    
-    render () {
-        //это же и есть получение списка товаров корзины
-        let html = "";
-        this.goods.forEach(({title, price, imgSrc, color, size, quantity, shippingType}) => {
-            const goodItem = new GoodsItem(title, price, imgSrc, color, size, quantity, shippingType);
-            html += goodItem.render();
-        });
-        document.querySelector ('.bracket_table').innerHTML = html;
-    }
-    calculateAndRenderSummary () {
-        let summ = 0;
-        this.goods.forEach(({price = 0, quantity = 1}) => {
-            summ += price*quantity;
-            console.log(price);
-        });
-        document.querySelector ('.sub_total').innerHTML = "Sub total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#36;" + summ;
-        document.querySelector ('.grand_total').innerHTML = "&#36;" + summ;
-    }
-}
-// const list = new GoodsList();
-// list.fetchGoods();
-// list.deleteGoods(1);
-// list.render();
-// list.calculateAndRenderSummary ();
-
-
-class ProductItem {
-    constructor(title = "SOON", price = 0, imgSrc = "img/soon_placeholder.jpg"){
-        this.title = title;
+    constructor(id_product = 0, product_name = "SOON", price = 0, imgSrc = "img/soon_placeholder.jpg"){
+        this.id_product = id_product;
+        this.product_name = product_name;
         this.price = price;
         this.imgSrc = imgSrc;
     }
@@ -119,44 +31,39 @@ class ProductItem {
                     </div>
                 </a>
                 <div class="description_featured">
-                    <div class="featured_name">${this.title}</div>
+                    <div class="featured_name">${this.product_name}</div>
                     <div class="featured_price">$${this.price}.00</div>
                 </div>
             </a>
         </div>`;
     }
 }
-class ProductList {
+class GoodsList {
     constructor () {
         this.goods = [];
     }
-    fetchGoods (itemsArray = []){
-        this.goods = itemsArray;
+    fetchGoods (){
+        makeGETRequest(`${api}/catalogData.json`)
+        //.then((data) => {console.log(data)})
+        // .then((data) => {console.log(data.contents)})
+        .then((data) => {this.goods = data})
+        .then(() => this.render())
+        // .then((data) => (this.goods = [1, 2, 3]))
+        // .then(() => {console.log(this.goods)})
+        // .then(() => {console.log(this)})
+        
+        // .catch(() => {console.log('Error')})
     }
     render () {
         let html = "";
-        this.goods.forEach(({title, price, imgSrc}) => {
-            const goodItem = new ProductItem(title, price, imgSrc);
+        console.log(this.goods);
+        this.goods.forEach(({id_product, product_name, price}) => {
+            const goodItem = new GoodsItem(id_product, product_name, price);
             html += goodItem.render();
         });
         document.querySelector ('.products').innerHTML = html;
     }
-    // calculateAndRenderSummary () {
-    //     let summ = 0;
-    //     this.goods.forEach(({price = 0, quantity = 1}) => {
-    //         summ += price*quantity;
-    //         console.log(price);
-    //     });
-    //     document.querySelector ('.sub_total').innerHTML = "Sub total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#36;" + summ;
-    //     document.querySelector ('.grand_total').innerHTML = "&#36;" + summ;
-    // }
 }
-const itemslist = new ProductList();
-itemslist.fetchGoods(products);
-itemslist.render();
-
-
-const api = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/addToBasket.json";
 
 const makeGETRequest = (url) => {
     let xhr;
@@ -174,20 +81,16 @@ const makeGETRequest = (url) => {
         xhr.onreadystatechange = function (){
             if (xhr.readyState === xhr.DONE && xhr.status === 200 ) {
                 let data  = JSON.parse(xhr.response);
+                console.log('jobs done');
                 resolve(data);
             } else if (xhr.status != 200) {}
         }
     });
-    // request
-    //     .then((data) => {
-    //         cb(data);
-    //     })
-    //     .catch(() => {
-    //         console.log('Error');
-    //     });
   }
+// makeGETRequest(`${api}/`)
+//     .then((data) => {console.log(data)})
+//     .catch(() => {console.log('Error')})
 
-makeGETRequest(api)
-    .then((data) => {console.log(data)})
-    .catch(() => {console.log('Error')})
-
+    const itemslist = new GoodsList();
+    itemslist.fetchGoods();
+// itemslist.render();
