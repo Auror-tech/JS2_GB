@@ -44,19 +44,11 @@ class GoodsList {
     }
     fetchGoods (){
         makeGETRequest(`${api}/catalogData.json`)
-        //.then((data) => {console.log(data)})
-        // .then((data) => {console.log(data.contents)})
         .then((data) => {this.goods = data})
         .then(() => this.render())
-        // .then((data) => (this.goods = [1, 2, 3]))
-        // .then(() => {console.log(this.goods)})
-        // .then(() => {console.log(this)})
-        
-        // .catch(() => {console.log('Error')})
     }
     render () {
         let html = "";
-        console.log(this.goods);
         this.goods.forEach(({id_product, product_name, price}) => {
             const goodItem = new GoodsItem(id_product, product_name, price);
             html += goodItem.render();
@@ -75,22 +67,67 @@ const makeGETRequest = (url) => {
 
     xhr.open('GET', url);
     xhr.send();
-    console.log('2');
 
     return new Promise ((resolve, reject) => {
         xhr.onreadystatechange = function (){
             if (xhr.readyState === xhr.DONE && xhr.status === 200 ) {
                 let data  = JSON.parse(xhr.response);
-                console.log('jobs done');
                 resolve(data);
             } else if (xhr.status != 200) {}
         }
     });
   }
-// makeGETRequest(`${api}/`)
-//     .then((data) => {console.log(data)})
-//     .catch(() => {console.log('Error')})
-
     const itemslist = new GoodsList();
     itemslist.fetchGoods();
 // itemslist.render();
+
+class BracketItem {
+    constructor (id_product = 0, product_name = "NotFound", price = 0, quantity = 404 , imgSrc = 'img/soon_placeholder.jpg'){
+        this.id_product = id_product;
+        this.product_name = product_name;
+        this.price = price;
+        this.imgSrc = imgSrc;
+        this.quantity = quantity;
+    }
+    render () {
+        return `
+        <div class="drop_item"> <img src="${this.imgSrc}" class="cart_img" alt="">
+        <div class="cart_description">
+            <div class="cart_item_name">${this.product_name}</div> <img src="img/cart_stars.png" alt="" class="cart_stars">
+            <div class="cart_item_price">${this.quantity} x &#36;${this.price}</div> <img src="img/delete_icon.png" alt="" class="cart_delete"> </div>
+        <div class="cart_line"></div>
+        </div>`
+    }
+}
+
+class BracketList {
+    constructor() {
+        this.itemsList = [];
+        this.summ = 0;
+    }
+    fetchGoods () {
+        makeGETRequest(`${api}/getBasket.json`)
+        .then((data) => {
+            this.summ = data.amount;
+            this.countGoods = data.countGoods;
+            this.itemsList = data.contents;
+        })
+        .then(() => this.renderSumm())
+        .then(() => this.render())
+    }
+    render (){
+        let html = "";
+        this.itemsList.forEach(({id_product, product_name, price, quantity, imgSrc}) => {
+            const bracketItem = new BracketItem(id_product, product_name, price, quantity, imgSrc);
+            html += bracketItem.render();
+        });
+        document.querySelector ('.drop_bracketList').innerHTML = html;
+        console.log(html);
+    }
+    renderSumm () {
+        document.querySelectorAll('.summ_text')[1].innerHTML = `&#36;${this.summ}`;
+    }
+}
+
+const bracketList = new BracketList();
+bracketList.fetchGoods();
