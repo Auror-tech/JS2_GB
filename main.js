@@ -41,21 +41,40 @@ class GoodsItem {
 class GoodsList {
     constructor () {
         this.goods = [];
+        this.filteredGoods = [];
     }
     fetchGoods (){
         makeGETRequest(`${api}/catalogData.json`)
         .then((data) => {this.goods = data})
-        .then(() => this.render())
+        .then(() => this.render(this.goods))
     }
-    render () {
+    render (listToRender) {
         let html = "";
-        this.goods.forEach(({id_product, product_name, price}) => {
+        listToRender.forEach(({id_product, product_name, price}) => {
             const goodItem = new GoodsItem(id_product, product_name, price);
             html += goodItem.render();
         });
         document.querySelector ('.products').innerHTML = html;
     }
+    filterGoods(currentInput) {
+        const regexp = new RegExp(currentInput, 'i');
+        this.filteredGoods = this.goods.filter(good => regexp.test(good.product_name));
+        this.render(this.filteredGoods);
+    }
 }
+new Vue( {
+    el: '.search_text1',
+    data: {
+        currentInput: 'search...'
+    },
+    methods: {
+        filter(event) {
+            this.currentInput = event.target.value;
+            console.log(this.currentInput);
+            itemslist.filterGoods(this.currentInput);
+        }
+    }
+});
 
 const makeGETRequest = (url) => {
     let xhr;
@@ -79,7 +98,7 @@ const makeGETRequest = (url) => {
   }
     const itemslist = new GoodsList();
     itemslist.fetchGoods();
-// itemslist.render();
+
 
 class BracketItem {
     constructor (id_product = 0, product_name = "NotFound", price = 0, quantity = 404 , imgSrc = 'img/soon_placeholder.jpg'){
@@ -122,7 +141,6 @@ class BracketList {
             html += bracketItem.render();
         });
         document.querySelector ('.drop_bracketList').innerHTML = html;
-        console.log(html);
     }
     renderSumm () {
         document.querySelectorAll('.summ_text')[1].innerHTML = `&#36;${this.summ}`;

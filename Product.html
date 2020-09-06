@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
     <title>Document</title>
 </head>
 
@@ -14,7 +15,14 @@
             <a href="index.html" class="logo"><img src="img/18%20(1).png" alt="" class="logo_img"><span class="brand">BRAN</span><span class="bran_d">D</span></a>
             <form class="header_form" action="#">
                 <div class="browse ">Browse <img src="img/arrow.png" alt="" class="arrow"></div>
-                <input type="text" class="search_text hover_input" value="Search for item...">
+                <div class="search_text1">
+                    <input 
+                        type="text" 
+                        class="search_text hover_input" 
+                        v-model="currentInput"
+                        v-on:input = "filter"
+                    >
+                </div>
                 <button class="button_search hover_input"><img src="img/search_icon.png" alt="" class="search_icon"></button>
             </form>
         </div>
