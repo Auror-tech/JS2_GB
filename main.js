@@ -73,7 +73,7 @@ new Vue( {
             console.log(this.currentInput);
             itemslist.filterGoods(this.currentInput);
         }
-    }
+    },
 });
 
 const makeGETRequest = (url) => {
@@ -89,7 +89,7 @@ const makeGETRequest = (url) => {
 
     return new Promise ((resolve, reject) => {
         xhr.onreadystatechange = function (){
-            if (xhr.readyState === xhr.DONE && xhr.status === 200 ) {
+            if (xhr.readyState === xhr.DONE) {
                 let data  = JSON.parse(xhr.response);
                 resolve(data);
             } else if (xhr.status != 200) {}
