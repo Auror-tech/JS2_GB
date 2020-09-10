@@ -14,6 +14,48 @@ const goods = [
 ];
 
 
+Vue.component('bracket-component', {
+    template: `
+        <div class="drop_bracket">
+        <div class="drop__flex">
+            <div class="drop_bracketList">
+            </div>
+            <div class="total_summ"> <span class="summ_text">TOTAL</span> <span class="summ_text">&#36;500.00</span> </div>
+            <a href="#">
+                <div class="cart_pink">Checkout</div>
+            </a>
+            <a href="#">
+                <div class="cart_button">Go to cart</div>
+            </a>
+        </div>
+        </div>
+    `,
+});
+
+
+
+Vue.component ('search-component', {
+    template: `
+    <div class="search_text1">
+    <input 
+        type="text" 
+        class="search_text hover_input" 
+        v-bind:input="currentInput"
+        v-on:input = "$emit('inputed',currentInput)"
+    >
+    </div>
+    `,
+    props: {
+        onInputHandler: Function,
+        currentInput: String,
+        filter: Function
+    },
+
+
+});
+
+
+
 class GoodsItem {
     constructor(id_product = 0, product_name = "SOON", price = 0, imgSrc = "img/soon_placeholder.jpg"){
         this.id_product = id_product;
@@ -63,11 +105,14 @@ class GoodsList {
     }
 }
 new Vue( {
-    el: '.search_text1',
+    el: '.header_form',
     data: {
         currentInput: 'search...'
     },
     methods: {
+        onInputHandler(data) {
+            console.log('inputed', data);
+          },
         filter(event) {
             this.currentInput = event.target.value;
             console.log(this.currentInput);
@@ -75,6 +120,7 @@ new Vue( {
         }
     },
 });
+
 
 const makeGETRequest = (url) => {
     let xhr;
@@ -111,10 +157,10 @@ class BracketItem {
     render () {
         return `
         <div class="drop_item"> <img src="${this.imgSrc}" class="cart_img" alt="">
-        <div class="cart_description">
-            <div class="cart_item_name">${this.product_name}</div> <img src="img/cart_stars.png" alt="" class="cart_stars">
-            <div class="cart_item_price">${this.quantity} x &#36;${this.price}</div> <img src="img/delete_icon.png" alt="" class="cart_delete"> </div>
-        <div class="cart_line"></div>
+            <div class="cart_description">
+                <div class="cart_item_name">${this.product_name}</div> <img src="img/cart_stars.png" alt="" class="cart_stars">
+                <div class="cart_item_price">${this.quantity} x &#36;${this.price}</div> <img src="img/delete_icon.png" alt="" class="cart_delete"> </div>
+            <div class="cart_line"></div>
         </div>`
     }
 }
@@ -146,6 +192,14 @@ class BracketList {
         document.querySelectorAll('.summ_text')[1].innerHTML = `&#36;${this.summ}`;
     }
 }
+
+new Vue( {
+    el: '.header',
+    data: {
+    },
+    methods: {
+    },
+});
 
 const bracketList = new BracketList();
 bracketList.fetchGoods();
