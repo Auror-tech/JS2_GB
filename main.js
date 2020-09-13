@@ -1,78 +1,205 @@
 "use strict"
+
+const api = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses";
 const goods = [
-    { title: 'MANGO PEOPLE T-SHIRT', price: 150, imgSrc: 'img/bracket_1.jpg', color: 'RED', size: 'XII', quantity: 2, shippingType: 'FREE'},
-    { title: 'MANGO PEOPLE T-SHIRT', price: 50, imgSrc: 'img/bracket_2.jpg', color: 'BLUE', size: 'XI', quantity: 3, shippingType: 'FREE'},
-    { title: 'MANGO PEOPLE T-SHIRT', price: 350, imgSrc: 'img/bracket_3.jpg', color: 'GREEN', size: 'X', quantity: 7, shippingType: 'FREE'},
-    { title: 'MANGO PEOPLE T-SHIRT', price: 450, imgSrc: 'img/bracket_3.jpg', color: 'YELLOW', size: 'IX', quantity: 4, shippingType: 'FREE'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 150, imgSrc: 'img/product1.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 50, imgSrc: 'img/product2.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 350, imgSrc: 'img/product3.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 450, imgSrc: 'img/product4.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 150, imgSrc: 'img/product5.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 50, imgSrc: 'img/product6.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 350, imgSrc: 'img/product7.png'},
+    { title: 'MANGO PEOPLE T-SHIRT', price: 450, imgSrc: 'img/product8.png'},
     { },
 ];
 
+
+Vue.component('bracket-component', {
+    template: `
+        <div class="drop_bracket">
+        <div class="drop__flex">
+            <div class="drop_bracketList">
+            </div>
+            <div class="total_summ"> <span class="summ_text">TOTAL</span> <span class="summ_text">&#36;500.00</span> </div>
+            <a href="#">
+                <div class="cart_pink">Checkout</div>
+            </a>
+            <a href="#">
+                <div class="cart_button">Go to cart</div>
+            </a>
+        </div>
+        </div>
+    `,
+});
+
+
+
+Vue.component ('search-component', {
+    template: `
+    <div class="search_text1">
+    <input 
+        type="text" 
+        class="search_text hover_input" 
+        v-bind:input="currentInput"
+        v-on:input = "$emit('inputed',currentInput)"
+    >
+    </div>
+    `,
+    props: {
+        onInputHandler: Function,
+        currentInput: String,
+        filter: Function
+    },
+
+
+});
+
+
+
 class GoodsItem {
-    constructor(title = "SOON", price = 0, imgSrc = "img/soon_placeholder.jpg", color = "???", size = "?", quantity = 0, shippingType = "???"){
-        this.title = title;
+    constructor(id_product = 0, product_name = "SOON", price = 0, imgSrc = "img/soon_placeholder.jpg"){
+        this.id_product = id_product;
+        this.product_name = product_name;
         this.price = price;
         this.imgSrc = imgSrc;
-        this.color = color;
-        this.size = size;
-        this.quantity = quantity;
-        this.shippingType = shippingType;
     }
     render() {
-        return `<tr class="tr_br">
-        <td class="td_br td_br1">
-            <img src="${this.imgSrc}" alt="" class="br_img">
-            <div class="br_description">
-                <div class="br_name">${this.title}</div>
-                <div class="br_color">
-                <span class="bold11_black">Color: </span>
-                <span class="thin11_gray">${this.color}</span> <br>
-                
+        return `
+        <div class="item_block">
+            <a href="#" class="featured_link"> <img src="${this.imgSrc}" alt="" class="featured_link_img">
+                <a href="#" class="add_to_cart_link">
+                    <div class="add_to_cart"><img src="img/bracket_white.svg" alt="">
+                        <div class="add_to_cart_text">Add to Cart</div>
+                    </div>
+                </a>
+                <div class="description_featured">
+                    <div class="featured_name">${this.product_name}</div>
+                    <div class="featured_price">$${this.price}.00</div>
                 </div>
-                <div class="br_size">
-                    <span class="bold11_black">Size:</span>
-                <span class="thin11_gray">${this.size}</span>
-                </div>
-            </div>
-        </td>
-        <td class="td_br">&#36;${this.price}</td>
-        <td class="td_br">
-            <input type="number" class="br_quantity" value="${this.quantity}">
-        </td>
-        <td class="td_br">${this.shippingType}</td>
-        <td class="td_br">&#36;${this.price*this.quantity}</td>
-        <td class="td_br">
-            <img src="img/delete_icon.png" alt="" class="br_delete">
-        </td>
-    </tr>`;
+            </a>
+        </div>`;
     }
 }
-
 class GoodsList {
     constructor () {
         this.goods = [];
+        this.filteredGoods = [];
     }
     fetchGoods (){
-        this.goods = goods;
+        makeGETRequest(`${api}/catalogData.json`)
+        .then((data) => {this.goods = data})
+        .then(() => this.render(this.goods))
     }
-    render () {
+    render (listToRender) {
         let html = "";
-        this.goods.forEach(({title, price, imgSrc, color, size, quantity, shippingType}) => {
-            const goodItem = new GoodsItem(title, price, imgSrc, color, size, quantity, shippingType);
+        listToRender.forEach(({id_product, product_name, price}) => {
+            const goodItem = new GoodsItem(id_product, product_name, price);
             html += goodItem.render();
         });
-        document.querySelector ('.bracket_table').innerHTML = html;
+        document.querySelector ('.products').innerHTML = html;
     }
-    calculateAndRenderSummary () {
-        let summ = 0;
-        this.goods.forEach(({price = 0, quantity = 1}) => {
-            summ += price*quantity;
-            console.log(price);
-        });
-        document.querySelector ('.sub_total').innerHTML = "Sub total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#36;" + summ;
-        document.querySelector ('.grand_total').innerHTML = "&#36;" + summ;
+    filterGoods(currentInput) {
+        const regexp = new RegExp(currentInput, 'i');
+        this.filteredGoods = this.goods.filter(good => regexp.test(good.product_name));
+        this.render(this.filteredGoods);
     }
 }
-const list = new GoodsList();
-list.fetchGoods();
-list.render();
-list.calculateAndRenderSummary ();
+new Vue( {
+    el: '.header_form',
+    data: {
+        currentInput: 'search...'
+    },
+    methods: {
+        onInputHandler(data) {
+            console.log('inputed', data);
+          },
+        filter(event) {
+            this.currentInput = event.target.value;
+            console.log(this.currentInput);
+            itemslist.filterGoods(this.currentInput);
+        }
+    },
+});
+
+
+const makeGETRequest = (url) => {
+    let xhr;
+    if (window.XMLHttpRequest) {
+      xhr = new XMLHttpRequest();
+    } else if  (window.ActiveXObject) {
+      xhr = new ActiveXObject ("Microsoft.XMLHTTP");
+    };
+
+    xhr.open('GET', url);
+    xhr.send();
+
+    return new Promise ((resolve, reject) => {
+        xhr.onreadystatechange = function (){
+            if (xhr.readyState === xhr.DONE) {
+                let data  = JSON.parse(xhr.response);
+                resolve(data);
+            } else if (xhr.status != 200) {}
+        }
+    });
+  }
+    const itemslist = new GoodsList();
+    itemslist.fetchGoods();
+
+
+class BracketItem {
+    constructor (id_product = 0, product_name = "NotFound", price = 0, quantity = 404 , imgSrc = 'img/soon_placeholder.jpg'){
+        this.id_product = id_product;
+        this.product_name = product_name;
+        this.price = price;
+        this.imgSrc = imgSrc;
+        this.quantity = quantity;
+    }
+    render () {
+        return `
+        <div class="drop_item"> <img src="${this.imgSrc}" class="cart_img" alt="">
+            <div class="cart_description">
+                <div class="cart_item_name">${this.product_name}</div> <img src="img/cart_stars.png" alt="" class="cart_stars">
+                <div class="cart_item_price">${this.quantity} x &#36;${this.price}</div> <img src="img/delete_icon.png" alt="" class="cart_delete"> </div>
+            <div class="cart_line"></div>
+        </div>`
+    }
+}
+
+class BracketList {
+    constructor() {
+        this.itemsList = [];
+        this.summ = 0;
+    }
+    fetchGoods () {
+        makeGETRequest(`${api}/getBasket.json`)
+        .then((data) => {
+            this.summ = data.amount;
+            this.countGoods = data.countGoods;
+            this.itemsList = data.contents;
+        })
+        .then(() => this.renderSumm())
+        .then(() => this.render())
+    }
+    render (){
+        let html = "";
+        this.itemsList.forEach(({id_product, product_name, price, quantity, imgSrc}) => {
+            const bracketItem = new BracketItem(id_product, product_name, price, quantity, imgSrc);
+            html += bracketItem.render();
+        });
+        document.querySelector ('.drop_bracketList').innerHTML = html;
+    }
+    renderSumm () {
+        document.querySelectorAll('.summ_text')[1].innerHTML = `&#36;${this.summ}`;
+    }
+}
+
+new Vue( {
+    el: '.header',
+    data: {
+    },
+    methods: {
+    },
+});
+
+const bracketList = new BracketList();
+bracketList.fetchGoods();
