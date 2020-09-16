@@ -32,29 +32,43 @@ Vue.component('bracket-component', {
     `,
 });
 
-
-
 Vue.component ('search-component', {
     template: `
-    <div class="search_text1">
-    <input 
+        <input 
         type="text" 
         class="search_text hover_input" 
-        v-bind:input="currentInput"
-        v-on:input = "$emit('inputed',currentInput)"
-    >
-    </div>
+        v-model = "currentInput"
+        >
     `,
-    props: {
-        onInputHandler: Function,
-        currentInput: String,
-        filter: Function
+    data() {
+        return {
+            currentInput: 'search...'
+        }
     },
-
+    watch: {
+        currentInput() {
+            this.$emit('inputed', this.currentInput);
+        }
+    },
 
 });
 
-
+new Vue( {
+    el: '.header',
+    data: {
+        currentInput: 'search...'
+    },о
+    methods: {
+        onInputHandler(data) {
+            this.currentInput = data;
+            this.filter()
+          },
+        filter() {
+            // this.currentInput = event.target.value;
+            itemslist.filterGoods(this.currentInput);
+        }
+    },
+});
 
 class GoodsItem {
     constructor(id_product = 0, product_name = "SOON", price = 0, imgSrc = "img/soon_placeholder.jpg"){
@@ -104,22 +118,7 @@ class GoodsList {
         this.render(this.filteredGoods);
     }
 }
-new Vue( {
-    el: '.header_form',
-    data: {
-        currentInput: 'search...'
-    },
-    methods: {
-        onInputHandler(data) {
-            console.log('inputed', data);
-          },
-        filter(event) {
-            this.currentInput = event.target.value;
-            console.log(this.currentInput);
-            itemslist.filterGoods(this.currentInput);
-        }
-    },
-});
+
 
 
 const makeGETRequest = (url) => {
@@ -193,13 +192,15 @@ class BracketList {
     }
 }
 
-new Vue( {
-    el: '.header',
-    data: {
-    },
-    methods: {
-    },
-});
+
+// new Vue( {
+//     el: '.header',
+//     data: {
+
+//     },
+//     methods: {
+//     },
+// });
 
 const bracketList = new BracketList();
 bracketList.fetchGoods();

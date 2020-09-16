@@ -1,30 +1,33 @@
 Vue.component ('search',{
-    props: ['currentInput'],
     template: `
         <input 
         type="text"
-        v-bind:value="this.currentInput"
-        v-on:input="$emit('input', $event.target.value)"
+        v-model = "currentInput"
+        
         >
     `,
-    methods: {
-        onClickHandler(){
-            console.log('hhh');
+    data() {
+        return {
+            currentInput: 'search...'
         }
     },
+    watch: {
+        currentInput() {
+            console.log(this.currentInput);
+            this.$emit('inputed', this.currentInput);
+        }
+    },
+    
 })
-Vue.component('blog-post', {
-    props: ['currentInput'],
-    template: '<h3>{{ currentInput }}</h3>'
-  })
 new Vue ({
-    el: '#app',
+    el: '.app',
     data: {
-        currentInput: 'search...'
+        currentInput: 'search'
     },
     methods: {
-        // onClickHandler () {
-        //     console.log('h');
-        // }
+        kek2 (data) {
+            console.log('kek2');
+            this.currentInput = data;
+        }
     }
 })

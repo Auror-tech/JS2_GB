@@ -16,9 +16,12 @@
             <a href="index.html" class="logo"><img src="img/18%20(1).png" alt="" class="logo_img"><span class="brand">BRAN</span><span class="bran_d">D</span></a>
             <form class="header_form" action="#">
                 <div class="browse ">Browse <img src="img/arrow.png" alt="" class="arrow"></div>
-                <search-component
-                    @input="onInputHandler"
-                ></search-component>
+                <div class="search_text1">
+                    <search-component
+                    @inputed="onInputHandler"
+                    ></search-component>
+                </div>
+                
                 <button class="button_search hover_input"><img src="img/search_icon.png" alt="" class="search_icon"></button>
             </form>
         </div>
