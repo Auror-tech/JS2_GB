@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <title>Document</title>
 </head>
 
@@ -15,45 +16,16 @@
             <a href="index.html" class="logo"><img src="img/18%20(1).png" alt="" class="logo_img"><span class="brand">BRAN</span><span class="bran_d">D</span></a>
             <form class="header_form" action="#">
                 <div class="browse ">Browse <img src="img/arrow.png" alt="" class="arrow"></div>
-                <div class="search_text1">
-                    <input 
-                        type="text" 
-                        class="search_text hover_input" 
-                        v-model="currentInput"
-                        v-on:input = "filter"
-                    >
-                </div>
+                <search-component
+                    @input="onInputHandler"
+                ></search-component>
                 <button class="button_search hover_input"><img src="img/search_icon.png" alt="" class="search_icon"></button>
             </form>
         </div>
         <div class="header_right">
             <div class="dropdown_bracket">
                 <a href="shopping_cart.html" class="bracket_link"><img class="bracket" src="img/bracket.png" alt="bracket"></a>
-                <div class="drop_bracket">
-                    <div class="drop__flex">
-                        <div class="drop_bracketList">
-                            <div class="drop_item"> <img src="img/cart1.jpg" class="cart_img" alt="">
-                                <div class="cart_description">
-                                    <div class="cart_item_name">Rebox Zane</div> <img src="img/cart_stars.png" alt="" class="cart_stars">
-                                    <div class="cart_item_price">1 x &#36;250</div> <img src="img/delete_icon.png" alt="" class="cart_delete"> </div>
-                                <div class="cart_line"></div>
-                            </div>
-                            <div class="drop_item"> <img src="img/cart2.jpg" class="cart_img" alt="">
-                                <div class="cart_description">
-                                    <div class="cart_item_name">Rebox Zane</div> <img src="img/cart_stars.png" alt="" class="cart_stars">
-                                    <div class="cart_item_price">1 x &#36;250</div> <img src="img/delete_icon.png" alt="" class="cart_delete"> </div>
-                                <div class="cart_line"></div>
-                            </div>
-                        </div>
-                        <div class="total_summ"> <span class="summ_text">TOTAL</span> <span class="summ_text">&#36;500.00</span> </div>
-                        <a href="#">
-                            <div class="cart_pink">Checkout</div>
-                        </a>
-                        <a href="#">
-                            <div class="cart_button">Go to cart</div>
-                        </a>
-                    </div>
-                </div>
+                <bracket-component></bracket-component>
             </div> <a class="button hover_dropdown" href="#"><span class="my_account">My Account</span> <img src="img/white_arrow.png" alt="" class="arrow"></a> </div>
     </div>
     <div class="nav center">
